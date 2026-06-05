@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node src/app.js",
     "dev": "node --watch src/app.js",
-    "build": "cd client && npm install && npm run build",
+    "build": "cd client && npm install --include=dev && npm run build",
     "db:migrate": "npx prisma migrate dev",
     "db:studio": "npx prisma studio",
     "postinstall": "npx prisma generate"
