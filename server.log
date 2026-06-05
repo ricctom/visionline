@@ -1,0 +1,65 @@
+◇ injected env (5) from .env // tip: ◈ encrypted .env [www.dotenvx.com]
+◇ injected env (0) from .env // tip: ⌘ suppress logs { quiet: true }
+✅ OptiMundo API corriendo en http://localhost:3000
+📋 Rutas disponibles:
+   POST /api/auth/register/consumer
+   POST /api/auth/register/optica
+   POST /api/auth/register/brand
+   POST /api/auth/login
+   GET  /api/products
+   GET  /api/opticas
+   GET  /api/brands
+   POST /api/orders
+   GET  /api/admin/pending
+◇ injected env (5) from .env // tip: ⌘ suppress logs { quiet: true }
+◇ injected env (0) from .env // tip: ⌁ auth for agents [www.vestauth.com]
+✅ OptiMundo API corriendo en http://localhost:3000
+📋 Rutas disponibles:
+   POST /api/auth/register/consumer
+   POST /api/auth/register/optica
+   POST /api/auth/register/brand
+   POST /api/auth/login
+   GET  /api/products
+   GET  /api/opticas
+   GET  /api/brands
+   POST /api/orders
+   GET  /api/admin/pending
+◇ injected env (5) from .env // tip: ◈ encrypted .env [www.dotenvx.com]
+◇ injected env (0) from .env // tip: ⌘ enable debugging { debug: true }
+✅ OptiMundo API corriendo en http://localhost:3000
+📋 Rutas disponibles:
+   POST /api/auth/register/consumer
+   POST /api/auth/register/optica
+   POST /api/auth/register/brand
+   POST /api/auth/login
+   GET  /api/products
+   GET  /api/opticas
+   GET  /api/brands
+   POST /api/orders
+   GET  /api/admin/pending
+◇ injected env (5) from .env // tip: ⌘ custom filepath { path: '/custom/path/.env' }
+◇ injected env (0) from .env // tip: ⌘ custom filepath { path: '/custom/path/.env' }
+✅ OptiMundo API corriendo en http://localhost:3000
+📋 Rutas disponibles:
+   POST /api/auth/register/consumer
+   POST /api/auth/register/optica
+   POST /api/auth/register/brand
+   POST /api/auth/login
+   GET  /api/products
+   GET  /api/opticas
+   GET  /api/brands
+   POST /api/orders
+   GET  /api/admin/pending
+◇ injected env (5) from .env // tip: ⌘ override existing { override: true }
+◇ injected env (0) from .env // tip: ⌘ multiple files { path: ['.env.local', '.env'] }
+✅ OptiMundo API corriendo en http://localhost:3000
+📋 Rutas disponibles:
+   POST /api/auth/register/consumer
+   POST /api/auth/register/optica
+   POST /api/auth/register/brand
+   POST /api/auth/login
+   GET  /api/products
+   GET  /api/opticas
+   GET  /api/brands
+   POST /api/orders
+   GET  /api/admin/pending

@@ -1,0 +1,32 @@
+{
+  "name": "Visionline",
+  "short_name": "Visionline",
+  "description": "Marketplace de anteojos en Argentina",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1e40af",
+  "orientation": "portrait-primary",
+  "categories": ["shopping", "lifestyle"],
+  "lang": "es",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Productos",
+      "url": "/productos",
+      "description": "Ver catálogo de anteojos"
+    },
+    {
+      "name": "Mi carrito",
+      "url": "/carrito",
+      "description": "Ver mi carrito"
+    }
+  ]
+}

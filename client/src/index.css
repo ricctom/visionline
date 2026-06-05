@@ -1,0 +1,51 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #ebebeb;
+  color: #333;
+}
+
+a { text-decoration: none; color: inherit; }
+button { cursor: pointer; border: none; }
+input, select, textarea { font-family: inherit; font-size: 14px; }
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* ── Responsive mobile ── */
+@media (max-width: 768px) {
+  /* Grillas de 4 cols → 2 cols */
+  div[style*="repeat(4, 1fr)"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  /* Grillas de 3 cols → 1 col */
+  div[style*="repeat(3, 1fr)"] {
+    grid-template-columns: 1fr !important;
+  }
+  /* Grillas de 2 cols → 1 col */
+  div[style*="repeat(2, 1fr)"] {
+    grid-template-columns: 1fr !important;
+  }
+  /* Checkout y carrito side-by-side → stack */
+  div[style*="1fr 320px"],
+  div[style*="1fr 340px"],
+  div[style*="2fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+  /* Producto detalle */
+  div[style*="gridTemplateColumns: '1fr 1fr'"] {
+    grid-template-columns: 1fr !important;
+  }
+  /* Medidas del producto */
+  div[style*="repeat(5, 1fr)"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  /* Filtros + productos */
+  div[style*="220px"] {
+    display: none !important;
+  }
+}

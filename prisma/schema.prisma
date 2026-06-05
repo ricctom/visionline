@@ -1,0 +1,297 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = []
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================
+// USUARIOS
+// ============================================================
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  role         String   // consumer | optica | brand | distributor | admin
+  status       String   @default("pending") // pending | active | suspended
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  consumerProfile    ConsumerProfile?
+  opticaProfile      OpticaProfile?
+  brandProfile       BrandProfile?
+  distributorProfile DistributorProfile?
+
+  @@map("users")
+}
+
+// ============================================================
+// PERFILES
+// ============================================================
+
+model ConsumerProfile {
+  id        String   @id @default(uuid())
+  userId    String   @unique @map("user_id")
+  firstName String   @map("first_name")
+  lastName  String   @map("last_name")
+  phone     String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orders  Order[]
+  reviews Review[]
+
+  @@map("consumer_profiles")
+}
+
+model OpticaProfile {
+  id               String    @id @default(uuid())
+  userId           String    @unique @map("user_id")
+  businessName     String    @map("business_name")
+  cuit             String    @unique
+  matricula        String?
+  address          String?
+  city             String?
+  province         String?
+  phone            String?
+  logoUrl          String?   @map("logo_url")
+  description      String?
+  validationStatus String    @default("pending") @map("validation_status")
+  validatedAt      DateTime? @map("validated_at")
+  totalSales       Int       @default(0) @map("total_sales")
+  avgRating        Float?    @map("avg_rating")
+  isFeatured       Boolean   @default(false) @map("is_featured")
+  featuredUntil    DateTime? @map("featured_until")
+  createdAt        DateTime  @default(now()) @map("created_at")
+
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  inventory OpticaInventory[]
+  orders    Order[]
+  reviews   Review[]
+  ads       Ad[]
+
+  @@map("optica_profiles")
+}
+
+model BrandProfile {
+  id               String    @id @default(uuid())
+  userId           String    @unique @map("user_id")
+  brandName        String    @map("brand_name")
+  cuit             String    @unique
+  logoUrl          String?   @map("logo_url")
+  description      String?
+  website          String?
+  validationStatus String    @default("pending") @map("validation_status")
+  validatedAt      DateTime? @map("validated_at")
+  isFeatured       Boolean   @default(false) @map("is_featured")
+  featuredUntil    DateTime? @map("featured_until")
+  createdAt        DateTime  @default(now()) @map("created_at")
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  products Product[]
+  ads      Ad[]
+
+  @@map("brand_profiles")
+}
+
+model DistributorProfile {
+  id          String   @id @default(uuid())
+  userId      String   @unique @map("user_id")
+  companyName String   @map("company_name")
+  cuit        String   @unique
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  user       User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  inventory  OpticaInventory[]
+  orderItems OrderItem[]
+
+  @@map("distributor_profiles")
+}
+
+// ============================================================
+// PRODUCTOS
+// ============================================================
+
+model Product {
+  id             String   @id @default(uuid())
+  brandId        String   @map("brand_id")
+  name           String
+  sku            String?
+  description    String?
+  frameType      String   @map("frame_type") // opticos | sol | contacto | accesorios
+  gender         String?
+  material       String?
+  suggestedPrice Float?   @map("suggested_price")
+  // Medidas técnicas (en mm)
+  lensWidth      Float?   @map("lens_width")       // ancho del cristal
+  lensHeight     Float?   @map("lens_height")      // alto del cristal
+  bridge         Float?                            // puente nasal
+  templeLength   Float?   @map("temple_length")    // largo de patillas
+  totalWidth     Float?   @map("total_width")      // ancho total del marco
+  // Cristales
+  lensType       String?  @map("lens_type")        // polarizado | antirreflejo | fotocromático | clásico
+  uvProtection   String?  @map("uv_protection")    // UV400 | UV380
+  lensMaterial   String?  @map("lens_material")    // policarbonato | trivex | cristal mineral
+  // Armazón
+  frameShape     String?  @map("frame_shape")      // cuadrado | redondo | aviador | mariposa | rectangular
+  frameColor     String?  @map("frame_color")
+  lensColor      String?  @map("lens_color")
+  isPrescription Boolean  @default(false) @map("is_prescription")
+  status         String   @default("draft")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  brand     BrandProfile      @relation(fields: [brandId], references: [id])
+  images    ProductImage[]
+  variants  ProductVariant[]
+  inventory OpticaInventory[]
+
+  @@map("products")
+}
+
+model ProductImage {
+  id        String  @id @default(uuid())
+  productId String  @map("product_id")
+  url       String
+  isPrimary Boolean @default(false) @map("is_primary")
+  sortOrder Int     @default(0) @map("sort_order")
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("product_images")
+}
+
+model ProductVariant {
+  id         String  @id @default(uuid())
+  productId  String  @map("product_id")
+  color      String?
+  size       String?
+  skuVariant String? @map("sku_variant")
+
+  product   Product           @relation(fields: [productId], references: [id], onDelete: Cascade)
+  inventory OpticaInventory[]
+
+  @@map("product_variants")
+}
+
+// ============================================================
+// STOCK DE ÓPTICAS
+// ============================================================
+
+model OpticaInventory {
+  id            String   @id @default(uuid())
+  opticaId      String   @map("optica_id")
+  productId     String   @map("product_id")
+  variantId     String?  @map("variant_id")
+  stockType     String   @default("own") @map("stock_type")
+  quantity      Int      @default(0)
+  price         Float
+  status        String   @default("active")
+  distributorId String?  @map("distributor_id")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  optica      OpticaProfile       @relation(fields: [opticaId], references: [id])
+  product     Product             @relation(fields: [productId], references: [id])
+  variant     ProductVariant?     @relation(fields: [variantId], references: [id])
+  distributor DistributorProfile? @relation(fields: [distributorId], references: [id])
+  orderItems  OrderItem[]
+
+  @@unique([opticaId, productId, variantId])
+  @@map("optica_inventory")
+}
+
+// ============================================================
+// PEDIDOS
+// ============================================================
+
+model Order {
+  id               String    @id @default(uuid())
+  consumerId       String    @map("consumer_id")
+  opticaId         String    @map("optica_id")
+  status           String    @default("pending_payment")
+  subtotal         Float
+  shippingCost     Float     @default(0) @map("shipping_cost")
+  platformFee      Float     @default(0) @map("platform_fee")
+  total            Float
+  shippingAddress  String    @map("shipping_address")
+  shippingCity     String    @map("shipping_city")
+  shippingProvince String    @map("shipping_province")
+  trackingNumber   String?   @map("tracking_number")
+  paymentId        String?   @map("payment_id")
+  paidAt           DateTime? @map("paid_at")
+  shippedAt        DateTime? @map("shipped_at")
+  deliveredAt      DateTime? @map("delivered_at")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+
+  consumer ConsumerProfile @relation(fields: [consumerId], references: [id])
+  optica   OpticaProfile   @relation(fields: [opticaId], references: [id])
+  items    OrderItem[]
+  review   Review?
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id            String  @id @default(uuid())
+  orderId       String  @map("order_id")
+  inventoryId   String  @map("inventory_id")
+  quantity      Int     @default(1)
+  unitPrice     Float   @map("unit_price")
+  distributorId String? @map("distributor_id")
+  stockType     String  @map("stock_type")
+
+  order       Order               @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  inventory   OpticaInventory     @relation(fields: [inventoryId], references: [id])
+  distributor DistributorProfile? @relation(fields: [distributorId], references: [id])
+
+  @@map("order_items")
+}
+
+// ============================================================
+// REPUTACIÓN
+// ============================================================
+
+model Review {
+  id         String   @id @default(uuid())
+  orderId    String   @unique @map("order_id")
+  consumerId String   @map("consumer_id")
+  opticaId   String   @map("optica_id")
+  rating     Int
+  comment    String?
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  order    Order           @relation(fields: [orderId], references: [id])
+  consumer ConsumerProfile @relation(fields: [consumerId], references: [id])
+  optica   OpticaProfile   @relation(fields: [opticaId], references: [id])
+
+  @@map("reviews")
+}
+
+// ============================================================
+// PUBLICIDAD
+// ============================================================
+
+model Ad {
+  id          String   @id @default(uuid())
+  brandId     String?  @map("brand_id")
+  opticaId    String?  @map("optica_id")
+  target      String
+  placement   String
+  imageUrl    String   @map("image_url")
+  linkUrl     String?  @map("link_url")
+  startsAt    DateTime @map("starts_at")
+  endsAt      DateTime @map("ends_at")
+  impressions Int      @default(0)
+  clicks      Int      @default(0)
+  isActive    Boolean  @default(true) @map("is_active")
+
+  brand  BrandProfile?  @relation(fields: [brandId], references: [id])
+  optica OpticaProfile? @relation(fields: [opticaId], references: [id])
+
+  @@map("ads")
+}
