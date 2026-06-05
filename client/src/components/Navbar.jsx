@@ -15,7 +15,7 @@ export default function Navbar() {
 
         {/* Logo */}
         <Link to="/" style={{ fontWeight: 800, fontSize: 22, color: '#3483fa', whiteSpace: 'nowrap', letterSpacing: -0.5, flexShrink: 0 }}>
-          Opti<span style={{ color: '#333' }}>Mundo</span>
+          Vision<span style={{ color: '#333' }}>line</span>
         </Link>
 
         {/* Buscador con autocompletado */}
