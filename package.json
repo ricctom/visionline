@@ -11,6 +11,9 @@
     "db:studio": "npx prisma studio",
     "postinstall": "npx prisma generate"
   },
+  "engines": {
+    "node": ">=20.19.0"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
